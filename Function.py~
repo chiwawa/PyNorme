@@ -27,11 +27,7 @@ class Function:
         return re.sub('".*"', "", line)
 
     def checkKeywords(self, line, fullstr, linenb):
-        a = re.findall("(while|if|else|else\ if|return)\ {2,}\(", line)#; is not None:
-        if len(a) > 0:
-            print "Norme Error : too much spaces after keyword, line : %d" %(linenb + self.BeginLineNumber)
-            print "-------> " + fullstr
-        a = re.findall("(while|if|else|else\ if|return)\(", line)#; is not None:
+        a = re.findall("(while|if|else|else\ if|return)\ {2,}\(|(while|if|else|else\ if|return)\(", line)#; is not None:
         if len(a) > 0:
             print "Norme Error : missing space after keyword, line : %d" %(linenb + self.BeginLineNumber)
             print "-------> " + fullstr
