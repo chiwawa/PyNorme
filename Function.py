@@ -24,11 +24,10 @@ class Function:
         print "Check function\n%s" %self.function
 
     def checkKeywords(self, line, linenb):
-        print("Testing :" + line)
-        if re.findall("(while|if|else|else\ if|return)\ {2,}\(|(while|if|else|else\ if|return)\(", line) is not None:
+        a = re.findall("(while|if|else|else\ if|return)\ {2,}\(|(while|if|else|else\ if|return)\(", line)#; is not None:
+        if len(a) > 0:
             print "Norme Error : missing space after keyword, line : %d" %(linenb + self.BeginLineNumber)
-            sys.exit()
-            ##print (re.search(self.regexKeyword, self.function))
+            print "-------> " + line
 
     def checkDeclarativePart(self):
         """Verifie les declarations de variable de l'attribut function"""
