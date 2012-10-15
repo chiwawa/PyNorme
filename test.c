@@ -1,22 +1,22 @@
-int main(int argc, char **argv) {
+int main() {
   int i;
 
   i = 0;
   while (i < 10)
     {
-      ++i;
+      i = i+1;
     }
 
   while(i < 10)
     {
-      ++i;
+      i = i +1;
     }
   return 0;
 }
 
-int main(int argc, char **argv) { }
+int main() { }
 
-int main(int argc, char **argv);
+int main();
 
 int test = 0;
 int test1;
@@ -26,8 +26,8 @@ int main() {
 
   toto = 0;
   printf("%d\n", toto);
-  while (toto != 0) {
-    ++toto;
+  while  (toto != 0) {
+
   }
   return  (0);
 }

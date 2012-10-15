@@ -23,11 +23,21 @@ class Function:
 
         print "Check function\n%s" %self.function
 
-    def checkKeywords(self, line, linenb):
+    def trimLine(self, line):
+        return re.sub('".*"', "", line)
+
+    def checkKeywords(self, line, fullstr, linenb):
         a = re.findall("(while|if|else|else\ if|return)\ {2,}\(|(while|if|else|else\ if|return)\(", line)#; is not None:
         if len(a) > 0:
             print "Norme Error : missing space after keyword, line : %d" %(linenb + self.BeginLineNumber)
-            print "-------> " + line
+            print "-------> " + fullstr
+
+    def checkSpaceBinaryOperator(self, line, fullstr, linenb):
+        a = re.findall("[\+|/|-|\*|%|=](\w|\ {2,})", line) ## spaces after operators
+        a2 = re.findall("(\w|\ {2,})[\+|/|-|\*|%|=]", line)
+        if len(a) > 0 or len(a2) > 0:
+            print "Norme Error : missing space after binary operator, line : %d" %(linenb + self.BeginLineNumber)
+            print "-------> " + fullstr
 
     def checkDeclarativePart(self):
         """Verifie les declarations de variable de l'attribut function"""
@@ -46,10 +56,13 @@ class Function:
 
     def getFaults(self):
         i = 0
-        s = self.getNextLine()
-        while s is not None:
-            self.checkKeywords(s, i)
-            s = self.getNextLine()
+        fullstr = self.getNextLine()
+        while fullstr is not None:
+            s = self.trimLine(fullstr)
+            self.checkKeywords(s, fullstr, i)
+            self.checkSpaceBinaryOperator(s, fullstr, i)
+
+            fullstr = self.getNextLine()
             i = i + 1
 
 ## Properties
