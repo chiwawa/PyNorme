@@ -45,7 +45,7 @@ class NormeChecker:
                     functionString = ""
                 elif isInFunction == True:
                     function.function += line
-                i = i + 1
+                ++i
 
     def display(self):
         for file in self._functionList:
