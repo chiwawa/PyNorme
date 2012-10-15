@@ -36,6 +36,16 @@ class Function:
             print "Norme Error : missing space after keyword, line : %d" %(linenb + self.BeginLineNumber)
             print "-------> " + fullstr
 
+    def checkFunctionSpaces(self, line, fullstr, linenb):
+        a = re.findall("(?!while).*(?!return).*(?!if).*(?!else\ if).*\ {1,}\(", line)
+        a = re.findall("\w*\ +\(", line)
+
+        if len(a) > 0:
+            if a[0].find("while") == -1 and a[0].find("return") == -1 and a[0].find("if") == -1 and a[0].find("else if") == -1:
+                print "Norme Error : too much spaces after function call, line : %d" %(linenb + self.BeginLineNumber)
+                print "-------> " + fullstr
+
+
     def checkSpaceBinaryOperator(self, line, fullstr, linenb):
         a = re.findall("[\+|/|-|\*|%|=](\w|\ {2,})", line) ## spaces after operators
         a2 = re.findall("(\w|\ {2,})[\+|/|-|\*|%|=]", line)
@@ -45,9 +55,6 @@ class Function:
 
     def checkDeclarativePart(self):
         """Verifie les declarations de variable de l'attribut function"""
-
-    def checkFunctionCall(self):
-        """Verifie les appels de function de l'attribut function"""
 
     def getNextLine(self):
         index = self.function.find("\n", self._currentIndex)
@@ -64,6 +71,7 @@ class Function:
         while fullstr is not None:
             s = self.trimLine(fullstr)
             self.checkKeywords(s, fullstr, i)
+            self.checkFunctionSpaces(s, fullstr, i)
             self.checkSpaceBinaryOperator(s, fullstr, i)
 
             fullstr = self.getNextLine()

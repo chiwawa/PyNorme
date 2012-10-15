@@ -26,7 +26,6 @@ int main() {
 
   toto = 0;
   printf("%d\n", toto);
-  printf ("%d\n", toto);
   while  (toto != 0) {
 
   }
