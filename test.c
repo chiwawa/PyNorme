@@ -8,9 +8,7 @@ int main() {
     }
 
   while(i < 10)
-    {
-      i = i +1;
-    }
+    i = i +1;
   return 0;
 }
 
@@ -22,7 +20,7 @@ int test = 0;
 int test1;
 
 int main() {
-  int toto;
+  int toto = 0;
 
   toto = 0;
   printf("%d\n", toto);

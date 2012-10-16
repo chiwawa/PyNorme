@@ -53,8 +53,19 @@ class Function:
             print "Norme Error : missing space after binary operator, line : %d" %(linenb + self.BeginLineNumber)
             print "-------> " + fullstr
 
-    def checkDeclarativePart(self):
-        """Verifie les declarations de variable de l'attribut function"""
+    def checkMisplacedScope(self, line, fullstr, linenb):
+        a = re.findall("\w*\s\w*\([\w*\ *, = > < ! + -]*\)\s*{", line)
+        if len(a) > 0:
+            print "Norme Error : misplaced scope, line : %d" %(linenb + self.BeginLineNumber)
+            print "-------> " + fullstr
+
+    def checkDeclarativePart(self, line, fullstr, linenb):
+        a = re.findall("\w+\s+\w+", line)
+        if len(a) > 0:
+            a = re.findall("=", line)
+            if len(a) > 0:
+                print "Norme Error : initialization in declaration is not allowed : %d" %(linenb + self.BeginLineNumber)
+                print "-------> " + fullstr
 
     def getNextLine(self):
         index = self.function.find("\n", self._currentIndex)
@@ -73,6 +84,8 @@ class Function:
             self.checkKeywords(s, fullstr, i)
             self.checkFunctionSpaces(s, fullstr, i)
             self.checkSpaceBinaryOperator(s, fullstr, i)
+            self.checkMisplacedScope(s, fullstr, i)
+            self.checkDeclarativePart(s, fullstr, i)
 
             fullstr = self.getNextLine()
             i = i + 1
