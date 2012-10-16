@@ -1,4 +1,5 @@
 import re
+import sys
 
 from Function import *
 
@@ -18,7 +19,6 @@ class NormeChecker:
         self._anythingReg = r"."
         self._openScopeReg = r"\{"
         self._closeScopeReg = r"\}"
-
         self._functionList = []
 
     def isAFunction(self, line):
@@ -65,7 +65,9 @@ class NormeChecker:
 
     Filename = property(_get_filename, _set_filename)
 
-norme = NormeChecker("test.c")
-norme.loadFile()
-norme.display()
-norme.check()
+for arg in sys.argv:
+    if (arg.find(".py") != 0):
+        norme = NormeChecker(arg)
+        norme.loadFile()
+        norme.display()
+        norme.check()
