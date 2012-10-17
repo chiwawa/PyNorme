@@ -12,16 +12,18 @@ class Function:
 
     def __init__(self, func, nb):
         """Prends une fonction en parametre et la met dans l'attribut function"""
-        self._function = func
+        self._function = func[0:func.rfind("}") + 1]
+#        self._function = func[0:self._function.rfind("}")]
         self.keywords = list({"while", "if", "else if", "else", "return"})
         self.regexKeyword = r"while|if|else|else if|return"
+        self.isInDeclarationPart = True
 
         print("Begin line : " + str(nb))
         self._begin_line_number = nb
         print("Begin line : " + str(self._begin_line_number))
         self._currentIndex = 0;
 
-        print "Check function\n%s" %self.function
+        print ("Check function\n" + self._function)
 
     def trimLine(self, line):
         return re.sub('".*"', "", line)
@@ -45,7 +47,6 @@ class Function:
                 print "Norme Error : too much spaces after function call, line : %d" %(linenb + self.BeginLineNumber)
                 print "-------> " + fullstr
 
-
     def checkSpaceBinaryOperator(self, line, fullstr, linenb):
         a = re.findall("[\+|/|-|\*|%|=](\w|\ {2,})", line) ## spaces after operators
         a2 = re.findall("(\w|\ {2,})[\+|/|-|\*|%|=]", line)
@@ -59,12 +60,26 @@ class Function:
             print "Norme Error : misplaced scope, line : %d" %(linenb + self.BeginLineNumber)
             print "-------> " + fullstr
 
+    def checkIfStillIsInDeclarationPart(self, line, fullstr, linenb):
+        a = re.findall("^[\s]+$", line)
+        if len(a) > 0 or len(line) == 0:
+            self.isInDeclarationPart = False
+
+    def checkIfDeclarationIsSeparated(self, line, fullstr, linenb):
+        if self.isInDeclarationPart == True:
+            print "Norme Error : function ended without separation between declarations and instructions: %d" %(linenb + self.BeginLineNumber)
+
     def checkDeclarativePart(self, line, fullstr, linenb):
         a = re.findall("\w+\s+\w+", line)
         if len(a) > 0:
+            if a[0].find("return") != -1:
+                return 0
+            if self.isInDeclarationPart == False:
+                print "Norme Error : declaration is only allowed in the beginning of the function : %d" %(linenb + self.BeginLineNumber)
+                print "-------> " + fullstr
             a = re.findall("=", line)
             if len(a) > 0:
-                print "Norme Error : initialization in declaration is not allowed : %d" %(linenb + self.BeginLineNumber)
+                print "Norme Error : initialization in declaration is not allowed : %d" %(self.BeginLineNumber)
                 print "-------> " + fullstr
 
     def getNextLine(self):
@@ -77,10 +92,16 @@ class Function:
         return s
 
     def getFaults(self):
+
+
+        self.function = self.function[0:self.function.rfind("}") + 1]
         i = 0
+        fullstr = self.getNextLine()
+        ## check function signature
         fullstr = self.getNextLine()
         while fullstr is not None:
             s = self.trimLine(fullstr)
+            self.checkIfStillIsInDeclarationPart(s, fullstr, i)
             self.checkKeywords(s, fullstr, i)
             self.checkFunctionSpaces(s, fullstr, i)
             self.checkSpaceBinaryOperator(s, fullstr, i)
@@ -89,6 +110,7 @@ class Function:
 
             fullstr = self.getNextLine()
             i = i + 1
+        self.checkIfDeclarationIsSeparated(fullstr, fullstr, i)
 
 ## Properties
     def _get_function(self):

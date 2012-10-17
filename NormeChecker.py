@@ -69,5 +69,5 @@ for arg in sys.argv:
     if (arg.find(".py") != 0):
         norme = NormeChecker(arg)
         norme.loadFile()
-        norme.display()
+        #norme.display()
         norme.check()
